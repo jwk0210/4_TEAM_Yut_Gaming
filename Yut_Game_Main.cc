@@ -11,7 +11,12 @@ map<int,pair<int,int>>PLAYER;
 int Check_Who_Win() // Find who does not have no horse
 {
 	int who_win;
-	return who_win;
+	for(who_win = 1;who_win<=2;who_win++)
+	{
+		if(PLAYER[who_win].first == -1 && PLAYER[who_win].second == -1)
+			return who_win;
+	}
+	return 0;
 }
 
 void Win_Print(int a) // Print who win the game
