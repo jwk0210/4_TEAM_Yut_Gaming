@@ -21,14 +21,110 @@ int Check_Who_Win() // Find who does not have no horse
 
 void Win_Print(int a) // Print who win the game
 {
+	cout<<" --------------------- "<<endl;
+	cout<<"      Score Result "<<endl;
+	cout<<" --------------------- "<<endl;
+	cout<<" |                    | "<<endl;
+	for(int i=1 ; i<3;i++)
+	{
+		if(i == a)
+		{
+			cout<<" |    Player"<<i<<" Win!    | "<<endl;
+			cout<<" |♥  Congratulation ♥ |"<<endl;
+			cout<<" |                    | "<<endl;
+		}
+		else
+		{
+			cout<<" |    Player"<<i<<" lose!   | "<<endl;
+			cout<<" |                    | "<<endl;
+		}
+	}
+	cout<<" --------------------- "<<endl;
 }
+
 /*** YUTs ***/
 int Roll_Yut(string roll) // Roll Yuts using random function
 {
+	int yut;
+
+	if(roll!="R")
+		return -2;
+
+	yut=rand()%(16);
+
+	if(yut==0)
+		yut=-1;
+	else if(yut>=1 && yut<=3)
+		yut=1;
+	else if(yut>=4 && yut<=9)
+		yut=2;
+	else if(yut>=10 && yut<=13)
+		yut=3;
+	else if(yut==14)
+		yut=4;
+	else
+		yut=5;
+
+	return yut;
 }
 
 void Yut_Print(int a) // Print 6 cases of Yuts
 {
+	if(a == -1)
+	{
+		cout<<"  ---     ---     ---     --- "<<endl;
+		cout<<" | - |   | x |   | x |   | x |"<<endl;
+		cout<<" | - |   | x |   | x |   | x |"<<endl;
+		cout<<" | - |   | x |   | x |   | x |"<<endl;
+		cout<<" | - |   | x |   | x |   | x |"<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
+	}
+	else if(a == 1)
+	{
+		cout<<" ---    ---     ---     --- "<<endl;
+		cout<<" | |   | x |   | x |   | x |"<<endl;
+		cout<<" | |   | x |   | x |   | x |"<<endl;
+		cout<<" | |   | x |   | x |   | x |"<<endl;
+		cout<<" | |   | x |   | x |   | x |"<<endl;
+		cout<<" ---    ---     ---     --- "<<endl;
+	}
+	else if(a == 2)
+	{
+		cout<<" ---   ---    ---     --- "<<endl;
+		cout<<" | |   | |   | x |   | x |"<<endl;
+		cout<<" | |   | |   | x |   | x |"<<endl;
+		cout<<" | |   | |   | x |   | x |"<<endl;
+		cout<<" | |   | |   | x |   | x |"<<endl;
+		cout<<" ---   ---    ---     --- "<<endl;
+	}
+	else if(a == 3)
+	{
+		cout<<" ---   ---   ---    --- "<<endl;
+		cout<<" | |   | |   | |   | x |"<<endl;
+		cout<<" | |   | |   | |   | x |"<<endl;
+		cout<<" | |   | |   | |   | x |"<<endl;
+		cout<<" | |   | |   | |   | x |"<<endl;
+		cout<<" ---   ---   ---    --- "<<endl;
+	}
+	else if(a == 4)
+	{
+		cout<<" ---   ---   ---   --- "<<endl;
+		cout<<" | |   | |   | |   | |"<<endl;
+		cout<<" | |   | |   | |   | |"<<endl;
+		cout<<" | |   | |   | |   | |"<<endl;
+		cout<<" | |   | |   | |   | |"<<endl;
+		cout<<" ---   ---   ---   --- "<<endl;
+	}
+	else if(a == 5)
+	{
+		cout<<"  ---     ---     ---     --- "<<endl;
+		cout<<" | x |   | x |   | x |   | x |"<<endl;
+		cout<<" | x |   | x |   | x |   | x |"<<endl;
+		cout<<" | x |   | x |   | x |   | x |"<<endl;
+		cout<<" | x |   | x |   | x |   | x |"<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
+	}
+	return;
 }
 
 
@@ -57,7 +153,9 @@ int FIRST_STATE[21][21]={
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 {2,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,2},
 };
+
 int BOARD_STATE[21][21];
+
 void Board_Init() // Init Board_State
 {
 	int i,j;
@@ -72,6 +170,7 @@ void Board_Update(int player,int horse) // update the board when the horse's pos
 void Board_Print() // print the Yut_board with player's horse
 {
 }
+
 
 /**** Horse ****/
 void Horse_State() // check each player's horse state
