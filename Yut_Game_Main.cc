@@ -163,9 +163,63 @@ void Board_Init() // Init Board_State
 	for(j=0;j<21;j++)
 	BOARD_STATE[i][j]=FIRST_STATE[i][j];
 }
+
+/***   Horse position match with matrix coordinate       ***/
+pair<int,int> Pos_To_Coord(int horse_pos)
+{
+	map<int,pair<int,int>> coord;
+
+	return coord[horse_pos];
+}
+
+int Coord_TO_Pos(pair<int,int> coord)
+{
+	map<pair<int,int>,int> horse_pos;
+	return horse_pos[{coord.first,coord.second}];
+}
+/***********************************************************/
+
 void Board_Update(int player,int horse) // update the board when the horse's position changed
 {
+	pair<int,int> coord;
+
+	if(horse==1)
+	{	
+		if(PLAYER[player].first != 1)
+		{
+			coord=Pos_To_Coord(PLAYER[player].first);
+			BOARD_STATE[coord.first][coord.second]=3;
+		}
+
+		if(PLAYER[player+2].first != 1 && PLAYER[player+2].first != PLAYER[player].second && PLAYER[player+2].first != PLAYER[player].first)
+		{
+			coord=Pos_To_Coord(PLAYER[player+2].first);
+			BOARD_STATE[coord.first][coord.second]=FIRST_STATE[coord.first][coord.second];
+		}
+
+	}
+	else
+	{
+		if(PLAYER[player].second != 1)
+		{
+			coord=Pos_To_Coord(PLAYER[player].second);
+			BOARD_STATE[coord.first][coord.second]=3;
+		}
+
+
+		if(PLAYER[player+2].second != 1 && PLAYER[player+2].second != PLAYER[player].first && PLAYER[player+2].second != PLAYER[player].second)
+		{
+			coord=Pos_To_Coord(PLAYER[player+2].second);
+			BOARD_STATE[coord.first][coord.second]=FIRST_STATE[coord.first][coord.second];
+		}
+	}
+	if(PLAYER[player].first==PLAYER[player].second)
+	{
+		coord=Pos_To_Coord(PLAYER[player+2].second);
+		BOARD_STATE[coord.first][coord.second]=FIRST_STATE[coord.first][coord.second];
+	}
 }
+
 
 void Board_Print() // print the Yut_board with player's horse
 {
@@ -179,7 +233,148 @@ void Horse_State() // check each player's horse state
 
 int Move_Horse(int player, int horse, int yut) // After roll the yuts, find the horse where it can move 
 {
-	int catch_other;
+	int catch_other=0;
+	int horse_pos;
+	int prev_pos;
+	if(horse==1)
+	{
+		prev_pos=PLAYER[player+2].first;
+		horse_pos=PLAYER[player].first;
+		PLAYER[player+2].first=horse_pos;
+	}
+	else
+	{
+		prev_pos=PLAYER[player+2].second;
+		horse_pos=PLAYER[player].second;
+		PLAYER[player+2].second=horse_pos;
+	}
+
+	if(PLAYER[player].first==PLAYER[player].second && PLAYER[player].first!=1) // the horses overlapped
+	{
+		PLAYER[player+2].first=horse_pos;
+		PLAYER[player+2].second=horse_pos;
+	}
+
+	if(yut==-1) // Back_Do.. go back 1 block.. direction is where the horse comes from...
+	{
+		if(horse_pos==1)
+			return 0;
+
+		if(horse_pos==2)
+			horse_pos=30;
+		else if(horse_pos==16)
+		{
+			if(prev_pos<16)
+				horse_pos--;
+			else
+				horse_pos+=9;
+		}
+		else if(horse_pos==23)
+		{
+			if(prev_pos == 11 || prev_pos ==26 || prev_pos ==27)
+				horse_pos+=4;
+			else
+				horse_pos--;
+		}
+		else
+			horse_pos--;
+	}
+	else if(yut>0)
+	{
+		if(horse_pos<21 && horse_pos != 6 && horse_pos !=11 && horse_pos !=16 )
+		{
+			horse_pos+=yut;
+			if(horse_pos>20)
+				horse_pos+=9;
+		}
+		else if(horse_pos==6)
+		{
+			horse_pos+=yut+14;
+		}
+		else if(horse_pos==11)
+		{
+			if(yut==3)
+				horse_pos=23;
+			else
+			{
+				if(yut<3)
+					horse_pos+=yut+14;
+				else
+					horse_pos+=yut+13;
+			}
+		}
+		else if(horse_pos==23)
+		{
+			horse_pos+=yut+4;
+		}
+		else if(horse_pos<26)
+		{
+			horse_pos+=yut;
+			if(horse_pos>25)
+				horse_pos-=10;
+		}
+		else
+		{
+			horse_pos+=yut;
+			if(horse_pos==28)
+				horse_pos=23;
+			else if(horse_pos>28)
+				horse_pos+=-1;	
+		}
+	}
+
+	///horse out!!...////
+	if(horse_pos>30)
+		horse_pos=-1;
+
+
+	////catch or not/////
+	if(player==1)
+	{
+		if(horse_pos==PLAYER[2].first && horse_pos<31)
+		{
+			PLAYER[2].first=1;
+			PLAYER[4].first=1;
+			catch_other=1;
+		}
+
+		if(horse_pos==PLAYER[2].second && horse_pos<31)
+		{
+			PLAYER[2].second=1;
+			PLAYER[4].second=1;
+			catch_other=1;
+		}
+	}
+	else
+	{
+		if(horse_pos==PLAYER[1].first && horse_pos<31)
+		{
+			PLAYER[1].first=1;
+			PLAYER[3].first=1;
+			catch_other=1;
+		}
+
+		if(horse_pos==PLAYER[1].second && horse_pos<31)
+		{
+			PLAYER[1].second=1;
+			PLAYER[3].second=1;
+			catch_other=1;
+		}
+	}
+	/////////////////////
+
+	if(PLAYER[player].first==PLAYER[player].second && PLAYER[player].first!=1)
+	{
+		PLAYER[player].first=horse_pos;
+		PLAYER[player].second=horse_pos;
+	}
+	else{
+		if(horse==1)
+			PLAYER[player].first=horse_pos;
+		else
+			PLAYER[player].second=horse_pos;
+	}
+
 	return catch_other;
 }
 
