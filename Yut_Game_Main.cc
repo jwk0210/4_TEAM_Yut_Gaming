@@ -291,7 +291,56 @@ void Board_Print() // print the Yut_board with player's horse
 /**** Horse ****/
 void Horse_State() // check each player's horse state
 {
+	cout<<" --------------------------- "<<endl;
+	cout<<"         Horse state "<<endl;
+	cout<<" --------------------------- "<<endl;
+
+	for(int a = 1;a<=2;a++)
+	{
+		cout<<"           Horse1 Horse2"<<endl;
+		if(a == 1)
+		{
+			if(PLAYER[a].first != -1 && PLAYER[a].second != -1)
+			{
+				cout<<" Player"<<a<<" :   □      ■ "<<endl;
+			}
+			else if(PLAYER[a].first == -1 && PLAYER[a].second != -1)
+			{
+				cout<<" Player"<<a<<" :        ■ "<<endl;
+			}
+			else if(PLAYER[a].first != -1 && PLAYER[a].second == -1)
+			{
+				cout<<" Player"<<a<<" :   □ "<<endl;
+			}
+			else
+			{
+				cout<<" Player"<<a<<" finish! "<<endl;
+			}
+
+		}
+		else
+		{
+			if(PLAYER[a].first != -1 && PLAYER[a].second != -1)
+			{
+				cout<<" Player"<<a<<" :   ◇      ◆ "<<endl;
+			}
+			else if(PLAYER[a].first == -1 && PLAYER[a].second != -1)
+			{
+				cout<<" Player"<<a<<" :        ◆ "<<endl;
+			}
+			else if(PLAYER[a].first != -1 && PLAYER[a].second == -1)
+			{
+				cout<<" Player"<<a<<" :   ◇ "<<endl;
+			}
+			else
+			{
+				cout<<" Player"<<a<<" finish! "<<endl;
+			}
+		}
+	}
+	cout<<endl;
 }
+
 
 int Move_Horse(int player, int horse, int yut) // After roll the yuts, find the horse where it can move 
 {
