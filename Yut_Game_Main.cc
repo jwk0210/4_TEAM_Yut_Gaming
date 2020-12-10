@@ -203,7 +203,7 @@ pair<int,int> Pos_To_Coord(int horse_pos)
 	return coord[horse_pos];
 }
 
-int Coord_TO_Pos(pair<int,int> coord)
+int Coord_To_Pos(pair<int,int> coord)
 {
 	map<pair<int,int>,int> horse_pos;
 
@@ -285,6 +285,40 @@ void Board_Update(int player,int horse) // update the board when the horse's pos
 
 void Board_Print() // print the Yut_board with player's horse
 {
+	int i,j,horse_pos;
+	cout<<endl;
+	for(i=0;i<21;i++)
+	{
+		for(j=0;j<21;j++)
+		{
+			if(BOARD_STATE[i][j] == 1)
+				cout<<"●";
+			else if(BOARD_STATE[i][j] == 2)
+				cout<<"◎";
+			else if(BOARD_STATE[i][j] ==3)
+			{
+				horse_pos=Coord_To_Pos({i,j});
+
+				if(PLAYER[1].first == PLAYER[1].second && PLAYER[1].first == horse_pos)
+					cout<<"▣ ";
+				else if(PLAYER[2].first == PLAYER[2].second && PLAYER[2].first == horse_pos)
+					cout<<"◈";
+				else if(horse_pos==PLAYER[1].first)
+					cout<<"□";
+				else if(horse_pos==PLAYER[1].second)
+					cout<<"■";
+				else if(horse_pos==PLAYER[2].first)
+					cout<<"◇";
+				else
+					cout<<"◆";
+			}
+			else
+				cout<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<endl;
+	return;
 }
 
 
