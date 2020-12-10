@@ -169,12 +169,74 @@ pair<int,int> Pos_To_Coord(int horse_pos)
 {
 	map<int,pair<int,int>> coord;
 
+	coord[11] = {0,0};
+	coord[10] = {0,4};
+	coord[9] = {0,8};
+	coord[8] = {0,12};
+	coord[7] = {0,16};
+	coord[6] = {0,20};
+	coord[5] = {4,20};
+	coord[4] = {8,20};
+	coord[3] = {12,20};
+	coord[2] = {16,20};
+	coord[1] = {1,1};
+	coord[20] = {20,16};
+	coord[19] = {20,12};
+	coord[18] = {20,8};
+	coord[17] = {20,4};
+	coord[16] = {20,0};
+	coord[15] = {16,0};
+	coord[14] = {12,0};
+	coord[13] = {8,0};
+	coord[12] = {4,0};
+	coord[26] = {4,4};
+	coord[27] = {7,7};
+	coord[23] = {10,10};
+	coord[28] = {13,13};
+	coord[29] = {16,16};
+	coord[21] = {4,16};
+	coord[22] = {7,13};
+	coord[24] = {13,7};
+	coord[25] = {16,4};
+	coord[30] = {20,20};
+
 	return coord[horse_pos];
 }
 
 int Coord_TO_Pos(pair<int,int> coord)
 {
 	map<pair<int,int>,int> horse_pos;
+
+	horse_pos[{0,0}]=11;
+	horse_pos[{0,4}]=10;
+	horse_pos[{0,8}]=9;
+	horse_pos[{0,12}]=8;
+	horse_pos[{0,16}]=7;
+	horse_pos[{0,20}]=6;
+	horse_pos[{4,20}]=5;
+	horse_pos[{8,20}]=4;
+	horse_pos[{12,20}]=3;
+	horse_pos[{16,20}]=2;
+	horse_pos[{20,16}]=20;
+	horse_pos[{20,12}]=19;
+	horse_pos[{20,8}]=18;
+	horse_pos[{20,4}]=17;
+	horse_pos[{20,0}]=16;
+	horse_pos[{16,0}]=15;
+	horse_pos[{12,0}]=14;
+	horse_pos[{8,0}]=13;
+	horse_pos[{4,0}]=12;
+	horse_pos[{4,4}]=26;
+	horse_pos[{7,7}]=27;
+	horse_pos[{10,10}]=23;
+	horse_pos[{13,13}]=28;
+	horse_pos[{16,16}]=29;
+	horse_pos[{4,16}]=21;
+	horse_pos[{7,13}]=22;
+	horse_pos[{13,7}]=24;
+	horse_pos[{16,4}]=25;
+	horse_pos[{20,20}]=30;
+
 	return horse_pos[{coord.first,coord.second}];
 }
 /***********************************************************/
