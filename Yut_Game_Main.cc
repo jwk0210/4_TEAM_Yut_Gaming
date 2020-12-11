@@ -534,8 +534,8 @@ int* Init_Accumulation(int* accumulation)
 
 int main()
 {
-	int yut,player_turn=1,horse, move_num=1,i,choose;
-	int check_who_win=0, yut_or_mo=0, catch_other=0;
+int yut,player_turn=1,horse, move_num=1,i,choose, select;
+	int check_who_win=0, yut_or_mo=0,catch_other=0;
 	int *accumulation=new int(6);
 	string roll="N";
 	srand((unsigned int)time(NULL));
@@ -547,8 +547,15 @@ int main()
 	cout<<"       GAME    START!!"<<endl;
 	cout<<"------------------------------"<<endl;
 
+	Board_Init();
 	PLAYER[1]={1,1};
 	PLAYER[2]={1,1};
+	PLAYER[3]={1,1};//player1 prev not player3!
+	PLAYER[4]={1,1};//player2 prev not player4!
+
+	Horse_State();
+	Board_Print();
+
 
 
 	while(1)
@@ -571,7 +578,6 @@ int main()
 			}
 			yut=Roll_Yut(roll);
 			Yut_Print(yut);
-
 			if(yut==-1)
 				accumulation[0]++;
 			else
@@ -589,12 +595,130 @@ int main()
 				break;
 		}
 		
-		if(check_who_win) // The End of Game
+		if(move_num==1) // not yut_or_mo
+		{
+			while(1)
+			{
+				cout<<" Select the horse what you want! [1/2]"<<endl;
+				cin>>horse;
+				select=1;
+				if(horse==1)
+					if(PLAYER[player_turn].first==-1)
+						select=0;
+				else
+					if(PLAYER[player_turn].second==-1)
+						select=0;
+				if(select)
+					break;
+
+				cout<<"Player"<<player_turn<<"'s "<<horse<<"'s horse is already gone.. choose other horse!"<<endl;
+					
+			}	
+			catch_other=Move_Horse(player_turn,horse,yut);
+			Board_Update(player_turn,horse);
+			Horse_State();
+			Board_Print();
+		}
+		else // yut_or_mo
+		{
+			i=0;
+			while(1)
+			{
+				check_who_win=Check_Who_Win();
+				if(check_who_win)
+					break;
+				cout<<"Player"<<player_turn<<"'s turn! Check the list what you have!"<<endl;
+				cout<<"Back_Do : "<<accumulation[0]<<" Do : "<<accumulation[1]<<" Gae : "<<accumulation[2]<<" Girl : "<<accumulation[3]<<" Yut : "<<accumulation[4]<<" Mo : "<<accumulation[5]<<endl;
+				while(1)
+				{				
+					cout<<" What do you want? Back_Do[0] Do[1] Gae[2] Girl[3] Yut[4] Mo{5]"<<endl;
+					cin>>choose;
+					if(accumulation[choose]>0)
+						break;
+					else
+						cout<<"You don't have... Select again"<<endl;
+				}
+
+				while(1)
+				{
+					cout<<" Select the horse what you want! [1/2]"<<endl;
+					cin>>horse;
+					select=1;
+					if(horse==1)
+						if(PLAYER[player_turn].first==-1)
+							select=0;
+					else
+						if(PLAYER[player_turn].second==-1)
+							select=0;
+					if(select)
+						break;
+
+					cout<<"Player"<<player_turn<<"'s "<<horse<<"'s horse is already gone.. choose other horse!"<<endl;
+					
+				}
+
+				accumulation[choose]--;
+
+				if(choose==0)
+					choose=-1;
+
+				catch_other=Move_Horse(player_turn,horse,choose);
+			
+				Board_Update(player_turn,horse);
+				Horse_State();
+				Board_Print();
+
+				if(catch_other)
+				{
+					move_num++;
+					while(1)
+					{
+						cout<<endl<<"  Player"<<player_turn<<"' catches other player's horse!!"<<endl<<endl;
+						cout<<"   ROLL THE YUTS!!! (press the button [R])"<<endl;
+						cin>>roll;
+						yut=Roll_Yut(roll);
+						Yut_Print(yut);
+						if(yut==-1)
+							accumulation[0]++;
+						else
+							accumulation[yut]++;
+
+						if(yut==4 || yut==5)
+						{
+							yut_or_mo=1;
+							move_num++;
+						}
+						else
+							yut_or_mo=0;
+
+						if(!yut_or_mo)
+							break;
+					}
+				}
+
+				i++;
+
+				if(i>=move_num)
+					break;
+			}
+		}
+
+
+		if(catch_other)
+			cout<<"  Player"<<player_turn<<"' catches other player's horse!!"<<endl;
+		else
+		{
+			if(player_turn==1)
+				player_turn=2;
+			else
+				player_turn=1;
+		}
+		check_who_win=Check_Who_Win();
+		if(check_who_win)
 		{
 			Win_Print(check_who_win);
 			break;
 		}
 	}
-
 	return 0;
 }
