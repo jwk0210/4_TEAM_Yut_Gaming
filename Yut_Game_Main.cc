@@ -822,5 +822,3 @@ int main()
     }
     return 0;
 }
-
-download 표시 중입니다.
