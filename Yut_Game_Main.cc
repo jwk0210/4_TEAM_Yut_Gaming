@@ -3,8 +3,14 @@
 #include <time.h>
 #include <algorithm>
 #include <map>
+#include <windows.h>
 
 using namespace std;
+
+void Set_Console_View()
+{
+	system(" mode con cols=100 lines=50 ");
+}
 
 map<int,pair<int,int>>PLAYER;
 
@@ -325,6 +331,11 @@ void Board_Print() // print the Yut_board with player's horse
 /**** Horse ****/
 void Horse_State() // check each player's horse state
 {
+
+	Sleep(2000);
+	system("cls");
+	Sleep(1000);
+
 	cout<<" --------------------------- "<<endl;
 	cout<<"         Horse state "<<endl;
 	cout<<" --------------------------- "<<endl;
@@ -574,6 +585,7 @@ int Record_Yut(int yut)
 
 int main()
 {
+	Set_Console_View();
 	int yut,player_turn=1,horse, move_num=1,i,choose, select, overlap;
 	int check_who_win=0, yut_or_mo=0,catch_other=0;
 	string roll="N";
