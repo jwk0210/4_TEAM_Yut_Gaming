@@ -291,7 +291,10 @@ void Board_Print() // print the Yut_board with player's horse
 	{
 		for(j=0;j<21;j++)
 		{
-			if(BOARD_STATE[i][j] == 1)
+
+			if(i == 20 && j == 20)
+				cout<<"◎ <= Start!";
+			else if(BOARD_STATE[i][j] == 1)
 				cout<<"●";
 			else if(BOARD_STATE[i][j] == 2)
 				cout<<"◎";
