@@ -81,39 +81,39 @@ void Yut_Print(int a) // Print 6 cases of Yuts
 	}
 	else if(a == 1)
 	{
-		cout<<" ---    ---     ---     --- "<<endl;
-		cout<<" | |   | x |   | x |   | x |"<<endl;
-		cout<<" | |   | x |   | x |   | x |"<<endl;
-		cout<<" | |   | x |   | x |   | x |"<<endl;
-		cout<<" | |   | x |   | x |   | x |"<<endl;
-		cout<<" ---    ---     ---     --- "<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
+		cout<<" |   |   | x |   | x |   | x |"<<endl;
+		cout<<" |   |   | x |   | x |   | x |"<<endl;
+		cout<<" |   |   | x |   | x |   | x |"<<endl;
+		cout<<" |   |   | x |   | x |   | x |"<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
 	}
 	else if(a == 2)
 	{
-		cout<<" ---   ---    ---     --- "<<endl;
-		cout<<" | |   | |   | x |   | x |"<<endl;
-		cout<<" | |   | |   | x |   | x |"<<endl;
-		cout<<" | |   | |   | x |   | x |"<<endl;
-		cout<<" | |   | |   | x |   | x |"<<endl;
-		cout<<" ---   ---    ---     --- "<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
+		cout<<" |   |   |   |   | x |   | x |"<<endl;
+		cout<<" |   |   |   |   | x |   | x |"<<endl;
+		cout<<" |   |   |   |   | x |   | x |"<<endl;
+		cout<<" |   |   |   |   | x |   | x |"<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
 	}
 	else if(a == 3)
 	{
-		cout<<" ---   ---   ---    --- "<<endl;
-		cout<<" | |   | |   | |   | x |"<<endl;
-		cout<<" | |   | |   | |   | x |"<<endl;
-		cout<<" | |   | |   | |   | x |"<<endl;
-		cout<<" | |   | |   | |   | x |"<<endl;
-		cout<<" ---   ---   ---    --- "<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
+		cout<<" |   |   |   |   |   |   | x |"<<endl;
+		cout<<" |   |   |   |   |   |   | x |"<<endl;
+		cout<<" |   |   |   |   |   |   | x |"<<endl;
+		cout<<" |   |   |   |   |   |   | x |"<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
 	}
 	else if(a == 4)
 	{
-		cout<<" ---   ---   ---   --- "<<endl;
-		cout<<" | |   | |   | |   | |"<<endl;
-		cout<<" | |   | |   | |   | |"<<endl;
-		cout<<" | |   | |   | |   | |"<<endl;
-		cout<<" | |   | |   | |   | |"<<endl;
-		cout<<" ---   ---   ---   --- "<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
+		cout<<" |   |   |   |   |   |   |   |"<<endl;
+		cout<<" |   |   |   |   |   |   |   |"<<endl;
+		cout<<" |   |   |   |   |   |   |   |"<<endl;
+		cout<<" |   |   |   |   |   |   |   |"<<endl;
+		cout<<"  ---     ---     ---     --- "<<endl;
 	}
 	else if(a == 5)
 	{
@@ -407,6 +407,12 @@ int Move_Horse(int player, int horse, int yut) // After roll the yuts, find the 
 
 		if(horse_pos==2)
 			horse_pos=30;
+		else if(horse_pos==26)
+			horse_pos=11;
+		else if(horse_pos=28)
+			horse_pos=23;
+		else if(horse_pos=21)
+			horse_pos=6;
 		else if(horse_pos==16)
 		{
 			if(prev_pos<16)
@@ -458,13 +464,19 @@ int Move_Horse(int player, int horse, int yut) // After roll the yuts, find the 
 			if(horse_pos>25)
 				horse_pos-=10;
 		}
-		else
+		else if(horse_pos==30)
+			horse_pos=-1;
+		else if(horse_pos==26 || horse_pos==27)
 		{
 			horse_pos+=yut;
 			if(horse_pos==28)
 				horse_pos=23;
 			else if(horse_pos>28)
 				horse_pos+=-1;	
+		}
+		else
+		{
+			horse_pos+=yut;
 		}
 	}
 
@@ -523,20 +535,47 @@ int Move_Horse(int player, int horse, int yut) // After roll the yuts, find the 
 	return catch_other;
 }
 
+int Overlap_Horse(int player_turn)
+{
+	if(PLAYER[player_turn].first==PLAYER[player_turn].second && PLAYER[player_turn].first!=1)
+		return 1;
+	else
+		return 0;
+}
+
 /**** Accumulation ****/
-int* Init_Accumulation(int* accumulation)
+int *accumulation=new int(6);
+
+void Init_Accumulation()
 {
 	for(int i=0;i<6;i++)
 		accumulation[i]=0;
-
-	return accumulation;
 }
+
+int Record_Yut(int yut)
+{
+	int yut_or_mo;
+
+	if(yut==-1)
+		accumulation[0]++;
+	else				
+		accumulation[yut]++;
+
+	if(yut==4 || yut==5)
+	{
+		yut_or_mo=1;
+	}
+	else
+		yut_or_mo=0;
+
+	return yut_or_mo;
+}
+//////////////////////////
 
 int main()
 {
-int yut,player_turn=1,horse, move_num=1,i,choose, select;
+	int yut,player_turn=1,horse, move_num=1,i,choose, select, overlap;
 	int check_who_win=0, yut_or_mo=0,catch_other=0;
-	int *accumulation=new int(6);
 	string roll="N";
 	srand((unsigned int)time(NULL));
 	cout<<"--------------------------------------------"<<endl;
@@ -563,7 +602,7 @@ int yut,player_turn=1,horse, move_num=1,i,choose, select;
 		move_num=1;
 		cout<<endl<<"!!!!!!!!!!!!!!!  Player"<<player_turn<<"'s turn  !!!!!!!!!!!!!!!"<<endl;
 
-		accumulation=Init_Accumulation(accumulation);
+		Init_Accumulation();
 
 		while(1)
 		{
@@ -578,44 +617,49 @@ int yut,player_turn=1,horse, move_num=1,i,choose, select;
 			}
 			yut=Roll_Yut(roll);
 			Yut_Print(yut);
-			if(yut==-1)
-				accumulation[0]++;
-			else
-				accumulation[yut]++;
-
-			if(yut==4 || yut==5)
-			{
-				yut_or_mo=1;
-				move_num++;
-			}
-			else
-				yut_or_mo=0;
+			yut_or_mo=Record_Yut(yut);
 
 			if(!yut_or_mo)
 				break;
+
+			move_num++;
 		}
 		
 		if(move_num==1) // not yut_or_mo
 		{
-			while(1)
+			if(yut==-1 && (PLAYER[player_turn].first==-1 || PLAYER[player_turn].first==1) && (PLAYER[player_turn].second==-1 || PLAYER[player_turn].second==1))
 			{
-				cout<<" Select the horse what you want! [1/2]"<<endl;
-				cin>>horse;
-				select=1;
-				if(horse==1)
-					if(PLAYER[player_turn].first==-1)
-						select=0;
-				else
-					if(PLAYER[player_turn].second==-1)
-						select=0;
-				if(select)
-					break;
+				cout<< " There is no horse to move (Back-DO)!!!!!!)"<<endl;
+				catch_other=0;
+			}
+			else{
+				while(1)
+				{
+					overlap=Overlap_Horse(player_turn);
+					if(!overlap)
+					{
+						cout<<" Select the horse what you want! [1/2]"<<endl;
+						cin>>horse;
+					}
+					else
+						horse=1;
 
-				cout<<"Player"<<player_turn<<"'s "<<horse<<"'s horse is already gone.. choose other horse!"<<endl;
-					
-			}	
-			catch_other=Move_Horse(player_turn,horse,yut);
-			Board_Update(player_turn,horse);
+					select=1;
+					if(horse==1)
+						if(PLAYER[player_turn].first==-1)
+							select=0;
+					else
+						if(PLAYER[player_turn].second==-1)
+							select=0;
+					if(select)
+						break;
+
+					cout<<"Player"<<player_turn<<"'s "<<horse<<"'s horse is already gone.. choose other horse!"<<endl;
+						
+				}	
+				catch_other=Move_Horse(player_turn,horse,yut);
+				Board_Update(player_turn,horse);
+			}
 			Horse_State();
 			Board_Print();
 		}
@@ -641,8 +685,15 @@ int yut,player_turn=1,horse, move_num=1,i,choose, select;
 
 				while(1)
 				{
-					cout<<" Select the horse what you want! [1/2]"<<endl;
-					cin>>horse;
+					overlap=Overlap_Horse(player_turn);
+					if(!overlap)
+					{
+						cout<<" Select the horse what you want! [1/2]"<<endl;
+						cin>>horse;
+					}
+					else
+						horse=1;
+
 					select=1;
 					if(horse==1)
 						if(PLAYER[player_turn].first==-1)
@@ -678,21 +729,11 @@ int yut,player_turn=1,horse, move_num=1,i,choose, select;
 						cin>>roll;
 						yut=Roll_Yut(roll);
 						Yut_Print(yut);
-						if(yut==-1)
-							accumulation[0]++;
-						else
-							accumulation[yut]++;
-
-						if(yut==4 || yut==5)
-						{
-							yut_or_mo=1;
-							move_num++;
-						}
-						else
-							yut_or_mo=0;
+						yut_or_mo=Record_Yut(yut);
 
 						if(!yut_or_mo)
 							break;
+						move_num++;
 					}
 				}
 
@@ -704,7 +745,7 @@ int yut,player_turn=1,horse, move_num=1,i,choose, select;
 		}
 
 
-		if(catch_other)
+		if(catch_other) // catch other player's horses
 			cout<<"  Player"<<player_turn<<"' catches other player's horse!!"<<endl;
 		else
 		{
@@ -713,7 +754,8 @@ int yut,player_turn=1,horse, move_num=1,i,choose, select;
 			else
 				player_turn=1;
 		}
-		check_who_win=Check_Who_Win();
+
+		check_who_win=Check_Who_Win();//judge the game end
 		if(check_who_win)
 		{
 			Win_Print(check_who_win);
