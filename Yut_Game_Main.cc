@@ -3,6 +3,7 @@
 #include <time.h>
 #include <algorithm>
 #include <map>
+#include <windows.h>
 
 using namespace std;
 
