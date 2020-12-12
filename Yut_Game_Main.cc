@@ -663,13 +663,29 @@ int main()
                     overlap = Overlap_Horse(player_turn);
                     if (!overlap)
                     {
-                        while (1)
+                        if (yut == -1 && (PLAYER[player_turn].first == -1 || PLAYER[player_turn].first == 1))
                         {
-                            gotoxy(50, c); c++; cout << "Select the horse what you want! [1/2] : ";
-                            cin >> horse;
-                            if (horse == 1 || horse == 2)
-                                break;
+                            gotoxy(50, c); c++; cout << "The horse is automatically [2]!! ";
+                            Sleep(1000);
+                            horse = 2;
                         }
+                        else if (yut == -1 && (PLAYER[player_turn].second == -1 || PLAYER[player_turn].second == 1))
+                        {
+                            gotoxy(50, c); c++; cout << "The horse is automatically [1]!! ";
+                            Sleep(1000);
+                            horse = 1;
+                        }
+                        else
+                        {
+                            while (1)
+                            {
+                                gotoxy(50, c); c++; cout << "Select the horse what you want! [1/2] : ";
+                                cin >> horse;
+                                if (horse == 1 || horse == 2)
+                                    break;
+                            }
+                        }
+
                     }
                     else
                         horse = 1;
@@ -728,12 +744,27 @@ int main()
                     if (!overlap)
                     {
                         gotoxy(50, c); c++; cout << endl;
-                        while (1)
+                        if (choose == 0 && (PLAYER[player_turn].first == -1 || PLAYER[player_turn].first == 1))
                         {
-                            gotoxy(50, c); c++; cout << "Select the horse what you want! [1/2] : ";
-                            cin >> horse;
-                            if (horse == 1 || horse == 2)
-                                break;
+                            gotoxy(50, c); c++; cout << "The horse is automatically [2]!! ";
+                            Sleep(1000);
+                            horse = 2;
+                        }
+                        else if (choose==0 && (PLAYER[player_turn].second == -1 || PLAYER[player_turn].second == 1))
+                        {
+                            gotoxy(50, c); c++; cout << "The horse is automatically [1]!! ";
+                            Sleep(1000);
+                            horse = 1;
+                        }
+                        else
+                        {
+                            while (1)
+                            {
+                                gotoxy(50, c); c++; cout << "Select the horse what you want! [1/2] : ";
+                                cin >> horse;
+                                if (horse == 1 || horse == 2)
+                                    break;
+                            }
                         }
                     }
                     else
@@ -822,3 +853,4 @@ int main()
     }
     return 0;
 }
+
