@@ -6,6 +6,7 @@
 #include <Windows.h>
 
 using namespace std;
+
 void gotoxy(int x, int y)
 {
     COORD Pos;
@@ -18,7 +19,9 @@ void Set_Console_View()
     system(" mode con cols=100 lines=50 ");
 }
 
+
 map<int, pair<int, int>>PLAYER;
+
 
 int Check_Who_Win() // Find who does not have no horse
 {
@@ -42,7 +45,7 @@ void Win_Print(int a) // Print who win the game
         if (i == a)
         {
             cout << " |    Player" << i << " Win!    | " << endl;
-            cout << " |≡  Congratulation ≡ |" << endl;
+            cout << " |в╛  Congratulation в╛ |" << endl;
             cout << " |                    | " << endl;
         }
         else
@@ -307,25 +310,25 @@ void Board_Print() // print the Yut_board with player's horse
         for (j = 0; j < 21; j++)
         {
             if (BOARD_STATE[i][j] == 1)
-                cout << "﹃";
+                cout << "б▄";
             else if (BOARD_STATE[i][j] == 2)
-                cout << "﹄";
+                cout << "б▌";
             else if (BOARD_STATE[i][j] == 3)
             {
                 horse_pos = Coord_To_Pos({ i,j });
 
                 if (PLAYER[1].first == PLAYER[1].second && PLAYER[1].first == horse_pos)
-                    cout << "﹦ ";
+                    cout << "в├ ";
                 else if (PLAYER[2].first == PLAYER[2].second && PLAYER[2].first == horse_pos)
-                    cout << "﹥";
+                    cout << "в┬";
                 else if (horse_pos == PLAYER[1].first)
-                    cout << "﹛";
+                    cout << "бр";
                 else if (horse_pos == PLAYER[1].second)
-                    cout << "﹜";
+                    cout << "бс";
                 else if (horse_pos == PLAYER[2].first)
-                    cout << "﹙";
+                    cout << "б▐";
                 else
-                    cout << "﹚";
+                    cout << "б▀";
             }
             else
                 cout << "  ";
@@ -335,7 +338,7 @@ void Board_Print() // print the Yut_board with player's horse
     cout << endl;
     return;
 }
-
+////////////////////////////////////////////////////////////
 
 /**** Horse ****/
 void Horse_State() // check each player's horse state
@@ -356,15 +359,15 @@ void Horse_State() // check each player's horse state
             gotoxy(50, 3); cout << "           Horse1 Horse2" << endl;
             if (PLAYER[a].first != -1 && PLAYER[a].second != -1)
             {
-                gotoxy(50, 4); cout << " Player" << a << " :   ﹛    ﹜ " << endl;
+                gotoxy(50, 4); cout << " Player" << a << " :   бр    бс " << endl;
             }
             else if (PLAYER[a].first == -1 && PLAYER[a].second != -1)
             {
-                gotoxy(50, 4); cout << " Player" << a << " :         ﹜ " << endl;
+                gotoxy(50, 4); cout << " Player" << a << " :         бс " << endl;
             }
             else if (PLAYER[a].first != -1 && PLAYER[a].second == -1)
             {
-                gotoxy(50, 4); cout << " Player" << a << " :   ﹛ " << endl;
+                gotoxy(50, 4); cout << " Player" << a << " :   бр " << endl;
             }
             else
             {
@@ -377,15 +380,15 @@ void Horse_State() // check each player's horse state
             gotoxy(50, 5); cout << "           Horse1 Horse2" << endl;
             if (PLAYER[a].first != -1 && PLAYER[a].second != -1)
             {
-                gotoxy(50, 6); cout << " Player" << a << " :   ﹙    ﹚ " << endl;
+                gotoxy(50, 6); cout << " Player" << a << " :   б▐    б▀ " << endl;
             }
             else if (PLAYER[a].first == -1 && PLAYER[a].second != -1)
             {
-                gotoxy(50, 6); cout << " Player" << a << " :         ﹚ " << endl;
+                gotoxy(50, 6); cout << " Player" << a << " :         б▀ " << endl;
             }
             else if (PLAYER[a].first != -1 && PLAYER[a].second == -1)
             {
-                gotoxy(50, 6); cout << " Player" << a << " :   ﹙ " << endl;
+                gotoxy(50, 6); cout << " Player" << a << " :   б▐ " << endl;
             }
             else
             {
@@ -563,6 +566,7 @@ int Overlap_Horse(int player_turn)
     else
         return 0;
 }
+///////////////////////////////////////////////////////
 
 /**** Accumulation ****/
 int* accumulation = new int(6);
@@ -593,264 +597,273 @@ int Record_Yut(int yut)
 }
 //////////////////////////
 
-int main()
+
+class Game ////execute game
 {
-    Set_Console_View();
-    int yut, player_turn = 1, horse, move_num = 1, i, choose, select, overlap;
+    int yut, player_turn = 1, horse=1, move_num = 1, i=0, choose=0, select=0, overlap=0;
     int check_who_win = 0, yut_or_mo = 0, catch_other = 0;
     string roll = "N";
-    srand((unsigned int)time(NULL));
     int p = 10;
-    gotoxy(15 + p, 9 + p);   cout << "--------------------------------------------" << endl;
-    gotoxy(15 + p, 10 + p);  cout << "    THis game is Yut_Nori for 2 players     " << endl;
-    gotoxy(15 + p, 11 + p);   cout << "--------------------------------------------" << endl;
-    gotoxy(15 + p, 12 + p);  cout << "--------------------------------------------" << endl;
-    gotoxy(15 + p, 13 + p);   cout << "              GAME    START!!" << endl;
-    gotoxy(15 + p, 14 + p);   cout << "--------------------------------------------" << endl;
-
-    Board_Init();
-    PLAYER[1] = { 1,1 };
-    PLAYER[2] = { 1,1 };
-    PLAYER[3] = { 1,1 };//player1 prev not player3!
-    PLAYER[4] = { 1,1 };//player2 prev not player4!
-
-    Horse_State();
-    Board_Print();
-
-
-
-    while (1)
+public:
+    Game()
     {
-        move_num = 1;
-        int c = 9;
-        gotoxy(50, c); c++; cout << endl;
-        gotoxy(50, c); c++; cout << "!!!!!!!!!!!!!!!  Player" << player_turn << "'s turn  !!!!!!!!!!!!!!!" << endl;
+        gotoxy(15 + p, 9 + p);   cout << "--------------------------------------------" << endl;
+        gotoxy(15 + p, 10 + p);  cout << "    THis game is Yut_Nori for 2 players     " << endl;
+        gotoxy(15 + p, 11 + p);   cout << "--------------------------------------------" << endl;
+        gotoxy(15 + p, 12 + p);  cout << "--------------------------------------------" << endl;
+        gotoxy(15 + p, 13 + p);   cout << "              GAME    START!!" << endl;
+        gotoxy(15 + p, 14 + p);   cout << "--------------------------------------------" << endl;
 
-        Init_Accumulation();
+        Board_Init();
+        PLAYER[1] = { 1,1 };
+        PLAYER[2] = { 1,1 };
+        PLAYER[3] = { 1,1 };//player1 prev not player3!
+        PLAYER[4] = { 1,1 };//player2 prev not player4!
+
+        Horse_State();
+        Board_Print();
+
+
 
         while (1)
         {
-            gotoxy(50, c); c++; cout << "ROLL THE YUTS!!! (press the button [R]) : ";
-            cin >> roll;
+            move_num = 1;
+            int c = 9;
+            gotoxy(50, c); c++; cout << endl;
+            gotoxy(50, c); c++; cout << "!!!!!!!!!!!!!!!  Player" << player_turn << "'s turn  !!!!!!!!!!!!!!!" << endl;
+
+            Init_Accumulation();
+
             while (1)
             {
-                if (roll == "R")
-                    break;
-                gotoxy(50, c); c++; cout << "HEY Click the button [R] exactly!!! : ";
+                gotoxy(50, c); c++; cout << "ROLL THE YUTS!!! (press the button [R]) : ";
                 cin >> roll;
-            }
-            yut = Roll_Yut(roll);
-            Yut_Print(yut, c);
-            c = c + 6;
-            yut_or_mo = Record_Yut(yut);
-
-            if (!yut_or_mo)
-                break;
-
-            move_num++;
-        }
-
-        if (move_num == 1) // not yut_or_mo
-        {
-            if (yut == -1 && (PLAYER[player_turn].first == -1 || PLAYER[player_turn].first == 1) && (PLAYER[player_turn].second == -1 || PLAYER[player_turn].second == 1))
-            {
-                gotoxy(50, c); c++; cout << "There is no horse to move (Back-DO)!!!!!!)" << endl;
-                catch_other = 0;
-            }
-            else {
                 while (1)
                 {
-                    overlap = Overlap_Horse(player_turn);
-                    if (!overlap)
-                    {
-                        if (yut == -1 && (PLAYER[player_turn].first == -1 || PLAYER[player_turn].first == 1))
-                        {
-                            gotoxy(50, c); c++; cout << "The horse is automatically [2]!! ";
-                            Sleep(1000);
-                            horse = 2;
-                        }
-                        else if (yut == -1 && (PLAYER[player_turn].second == -1 || PLAYER[player_turn].second == 1))
-                        {
-                            gotoxy(50, c); c++; cout << "The horse is automatically [1]!! ";
-                            Sleep(1000);
-                            horse = 1;
-                        }
-                        else
-                        {
-                            while (1)
-                            {
-                                gotoxy(50, c); c++; cout << "Select the horse what you want! [1/2] : ";
-                                cin >> horse;
-                                if (horse == 1 || horse == 2)
-                                    break;
-                            }
-                        }
-
-                    }
-                    else
-                        horse = 1;
-
-                    select = 1;
-                    if (horse == 1)
-                        if (PLAYER[player_turn].first == -1)
-                            select = 0;
-                        else
-                            if (PLAYER[player_turn].second == -1)
-                                select = 0;
-                    if (select)
+                    if (roll == "R")
                         break;
-
-                    gotoxy(50, c); c++; cout << "Player" << player_turn << "'s " << horse << "'s horse is already gone.. choose other horse!" << endl;
-
+                    gotoxy(50, c); c++; cout << "HEY Click the button [R] exactly!!! : ";
+                    cin >> roll;
                 }
-                catch_other = Move_Horse(player_turn, horse, yut);
-                Board_Update(player_turn, horse);
-            }
-            Horse_State();
-            c = 9;
-            Board_Print();
-        }
-        else // yut_or_mo
-        {
-            i = 0;
-            while (1)
-            {
-                check_who_win = Check_Who_Win();
-                if (check_who_win)
+                yut = Roll_Yut(roll);
+                Yut_Print(yut, c);
+                c = c + 6;
+                yut_or_mo = Record_Yut(yut);
+
+                if (!yut_or_mo)
                     break;
-                gotoxy(50, c); c++; cout << "Player" << player_turn << "'s turn! Check the list what you have!" << endl;
-                gotoxy(50, c); c++; cout << endl;
-                gotoxy(50, c); c++; cout << "Back_Do : " << accumulation[0] << " Do : " << accumulation[1] << " Gae : " << accumulation[2] << " Girl : " << accumulation[3];
-                gotoxy(50, c); c++;   cout << "Yut : " << accumulation[4] << " Mo : " << accumulation[5] << endl;
-                while (1)
+
+                move_num++;
+            }
+
+            if (move_num == 1) // not yut_or_mo
+            {
+                if (yut == -1 && (PLAYER[player_turn].first == -1 || PLAYER[player_turn].first == 1) && (PLAYER[player_turn].second == -1 || PLAYER[player_turn].second == 1))
                 {
-                    gotoxy(50, c); c++; cout << "What do you want?";
+                    gotoxy(50, c); c++; cout << "There is no horse to move (Back-DO)!!!!!!)" << endl;
+                    catch_other = 0;
+                }
+                else {
                     while (1)
                     {
-                        gotoxy(50, c); c++;   cout << "Back_Do[0] Do[1] Gae[2] Girl[3] Yut[4] Mo{5] : ";
-                        cin >> choose;
-                        if (choose <= 5 && choose >= 0)
-                            break;
-                    }
-                    if (accumulation[choose] > 0)
-                        break;
-                    else
-                        gotoxy(50, c); c++; cout << "You don't have... Select again" << endl;
-                }
-
-                while (1)
-                {
-                    overlap = Overlap_Horse(player_turn);
-                    if (!overlap)
-                    {
-                        gotoxy(50, c); c++; cout << endl;
-                        if (choose == 0 && (PLAYER[player_turn].first == -1 || PLAYER[player_turn].first == 1))
+                        overlap = Overlap_Horse(player_turn);
+                        if (!overlap)
                         {
-                            gotoxy(50, c); c++; cout << "The horse is automatically [2]!! ";
-                            Sleep(1000);
-                            horse = 2;
-                        }
-                        else if (choose==0 && (PLAYER[player_turn].second == -1 || PLAYER[player_turn].second == 1))
-                        {
-                            gotoxy(50, c); c++; cout << "The horse is automatically [1]!! ";
-                            Sleep(1000);
-                            horse = 1;
-                        }
-                        else
-                        {
-                            while (1)
+                            if (yut == -1 && (PLAYER[player_turn].first == -1 || PLAYER[player_turn].first == 1))
                             {
-                                gotoxy(50, c); c++; cout << "Select the horse what you want! [1/2] : ";
-                                cin >> horse;
-                                if (horse == 1 || horse == 2)
-                                    break;
+                                gotoxy(50, c); c++; cout << "The horse is automatically [2]!! ";
+                                Sleep(1000);
+                                horse = 2;
                             }
+                            else if (yut == -1 && (PLAYER[player_turn].second == -1 || PLAYER[player_turn].second == 1))
+                            {
+                                gotoxy(50, c); c++; cout << "The horse is automatically [1]!! ";
+                                Sleep(1000);
+                                horse = 1;
+                            }
+                            else
+                            {
+                                while (1)
+                                {
+                                    gotoxy(50, c); c++; cout << "Select the horse what you want! [1/2] : ";
+                                    cin >> horse;
+                                    if (horse == 1 || horse == 2)
+                                        break;
+                                }
+                            }
+
                         }
-                    }
-                    else
-                        horse = 1;
-
-                    select = 1;
-                    if (horse == 1)
-                        if (PLAYER[player_turn].first == -1)
-                            select = 0;
                         else
-                            if (PLAYER[player_turn].second == -1)
+                            horse = 1;
+
+                        select = 1;
+                        if (horse == 1)
+                            if (PLAYER[player_turn].first == -1)
                                 select = 0;
-                    if (select)
-                        break;
+                            else
+                                if (PLAYER[player_turn].second == -1)
+                                    select = 0;
+                        if (select)
+                            break;
 
-                    gotoxy(50, c); c++; cout << "Player" << player_turn << "'s " << horse << "'s horse is already gone..";
-                    gotoxy(50, c); c++; cout << "choose other horse!" << endl;
+                        gotoxy(50, c); c++; cout << "Player" << player_turn << "'s " << horse << "'s horse is already gone.. choose other horse!" << endl;
 
+                    }
+                    catch_other = Move_Horse(player_turn, horse, yut);
+                    Board_Update(player_turn, horse);
                 }
-
-                accumulation[choose]--;
-
-                if (choose == 0)
-                    choose = -1;
-
-                catch_other = Move_Horse(player_turn, horse, choose);
-
-                Board_Update(player_turn, horse);
                 Horse_State();
                 c = 9;
                 Board_Print();
-
-                if (catch_other)
+            }
+            else // yut_or_mo
+            {
+                i = 0;
+                while (1)
                 {
-                    move_num++;
+                    check_who_win = Check_Who_Win();
+                    if (check_who_win)
+                        break;
+                    gotoxy(50, c); c++; cout << "Player" << player_turn << "'s turn! Check the list what you have!" << endl;
+                    gotoxy(50, c); c++; cout << endl;
+                    gotoxy(50, c); c++; cout << "Back_Do : " << accumulation[0] << " Do : " << accumulation[1] << " Gae : " << accumulation[2] << " Girl : " << accumulation[3];
+                    gotoxy(50, c); c++;   cout << "Yut : " << accumulation[4] << " Mo : " << accumulation[5] << endl;
                     while (1)
                     {
-                        gotoxy(50, c); c++; cout << endl << "Player" << player_turn << "' catches other player's horse!!";
-                        gotoxy(50, c); c++; cout << endl;
-                        gotoxy(50, c); c++; cout << "ROLL THE YUTS!!! (press the button [R])" << endl;
-                        cin >> roll;
+                        gotoxy(50, c); c++; cout << "What do you want?";
                         while (1)
                         {
-                            if (roll == "R")
+                            gotoxy(50, c); c++;   cout << "Back_Do[0] Do[1] Gae[2] Girl[3] Yut[4] Mo{5] : ";
+                            cin >> choose;
+                            if (choose <= 5 && choose >= 0)
                                 break;
-                            gotoxy(50, c); c++; cout << "HEY Click the button [R] exactly!!! : ";
-                            cin >> roll;
                         }
-                        yut = Roll_Yut(roll);
-                        Yut_Print(yut, c);
-                        yut_or_mo = Record_Yut(yut);
-
-                        if (!yut_or_mo)
+                        if (accumulation[choose] > 0)
                             break;
-                        move_num++;
+                        else
+                            gotoxy(50, c); c++; cout << "You don't have... Select again" << endl;
                     }
+
+                    while (1)
+                    {
+                        overlap = Overlap_Horse(player_turn);
+                        if (!overlap)
+                        {
+                            gotoxy(50, c); c++; cout << endl;
+                            if (choose == 0 && (PLAYER[player_turn].first == -1 || PLAYER[player_turn].first == 1))
+                            {
+                                gotoxy(50, c); c++; cout << "The horse is automatically [2]!! ";
+                                Sleep(1000);
+                                horse = 2;
+                            }
+                            else if (choose == 0 && (PLAYER[player_turn].second == -1 || PLAYER[player_turn].second == 1))
+                            {
+                                gotoxy(50, c); c++; cout << "The horse is automatically [1]!! ";
+                                Sleep(1000);
+                                horse = 1;
+                            }
+                            else
+                            {
+                                while (1)
+                                {
+                                    gotoxy(50, c); c++; cout << "Select the horse what you want! [1/2] : ";
+                                    cin >> horse;
+                                    if (horse == 1 || horse == 2)
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                            horse = 1;
+
+                        select = 1;
+                        if (horse == 1)
+                            if (PLAYER[player_turn].first == -1)
+                                select = 0;
+                            else
+                                if (PLAYER[player_turn].second == -1)
+                                    select = 0;
+                        if (select)
+                            break;
+
+                        gotoxy(50, c); c++; cout << "Player" << player_turn << "'s " << horse << "'s horse is already gone..";
+                        gotoxy(50, c); c++; cout << "choose other horse!" << endl;
+
+                    }
+
+                    accumulation[choose]--;
+
+                    if (choose == 0)
+                        choose = -1;
+
+                    catch_other = Move_Horse(player_turn, horse, choose);
+
+                    Board_Update(player_turn, horse);
+                    Horse_State();
+                    c = 9;
+                    Board_Print();
+
+                    if (catch_other)
+                    {
+                        move_num++;
+                        while (1)
+                        {
+                            gotoxy(50, c); c++; cout << endl << "Player" << player_turn << " catches other player's horse!!";
+                            gotoxy(50, c); c++; cout << endl;
+                            gotoxy(50, c); c++; cout << "ROLL THE YUTS!!! (press the button [R])" << endl;
+                            cin >> roll;
+                            while (1)
+                            {
+                                if (roll == "R")
+                                    break;
+                                gotoxy(50, c); c++; cout << "HEY Click the button [R] exactly!!! : ";
+                                cin >> roll;
+                            }
+                            yut = Roll_Yut(roll);
+                            Yut_Print(yut, c);
+                            yut_or_mo = Record_Yut(yut);
+
+                            if (!yut_or_mo)
+                                break;
+                            move_num++;
+                        }
+                    }
+
+                    i++;
+
+                    if (i >= move_num)
+                        break;
                 }
+            }
 
-                i++;
 
-                if (i >= move_num)
-                    break;
+            if (catch_other) // catch other player's horses
+            {
+                gotoxy(50, c); c++;  cout << "Player" << player_turn << " catches other player's horse!!" << endl;
+                gotoxy(50, c); c++;  cout << endl;
+            }
+            else
+            {
+                if (player_turn == 1)
+                    player_turn = 2;
+                else
+                    player_turn = 1;
+            }
+
+            check_who_win = Check_Who_Win();//judge the game end
+            if (check_who_win)
+            {
+                Win_Print(check_who_win);
+                break;
             }
         }
-
-
-        if (catch_other) // catch other player's horses
-        {
-            gotoxy(50, c); c++;  cout << "Player" << player_turn << " catches other player's horse!!" << endl;
-            gotoxy(50, c); c++;  cout << endl;
-        }
-        else
-        {
-            if (player_turn == 1)
-                player_turn = 2;
-            else
-                player_turn = 1;
-        }
-
-        check_who_win = Check_Who_Win();//judge the game end
-        if (check_who_win)
-        {
-            Win_Print(check_who_win);
-            break;
-        }
     }
+};
+
+int main()
+{
+    Set_Console_View();
+    srand((unsigned int)time(NULL));
+    Game();
     return 0;
 }
-
